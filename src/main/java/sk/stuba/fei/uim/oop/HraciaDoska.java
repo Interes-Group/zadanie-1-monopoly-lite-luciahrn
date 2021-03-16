@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HraciaDoska {
+
     private List<Player> players = new ArrayList<>();
     private final List<HraciePole> policka = new ArrayList<>();
     {
@@ -60,11 +61,26 @@ public class HraciaDoska {
 
     }
 
-    public HraciaDoska(List<Player> players) {
-        this.players = players;
+    public List<Player> getPlayers() {
+        return players;
+    }
+    public void addPlayer(Player newPlayer) {
+        players.add(newPlayer);
+    }
+
+    public HraciaDoska() {
+
     }
 
     public void vyhodHraca(Player out) {
-        players.remove(out);
+        if(players.size()==2) {
+            //vyhral, koniec hry
+            players.remove(out);
+            //vitaz co zostal, koniec hry
+
+        } else {
+            //hrac prehral
+            players.remove(out);
+        }
     }
 }

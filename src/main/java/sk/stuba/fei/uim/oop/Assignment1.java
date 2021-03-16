@@ -10,7 +10,10 @@ public class Assignment1 {
         super();
     }
 
-    public  void getPlayer() {
+
+
+    public  Player getPlayer() {
+
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 
         System.out.println("Zadaj svoje meno");
@@ -19,23 +22,29 @@ public class Assignment1 {
         Player hrac= new Player(userName);
         System.out.println("Meno je : " + userName);  // Output user input
 
+        return hrac;
 
     }
 
-    public  void nacitavajHracov() {
+    public  void nacitavajHracov(HraciaDoska doska) {
         Scanner pomocna = new Scanner(System.in);
         System.out.println("Pre zacatie hry a zaevidovanie hracov stlac 1:");
         String  premenna = pomocna.nextLine();
         int poradie=0;
         while (premenna.equals("1")) {
-            this.getPlayer();
+            doska.addPlayer(getPlayer());
             poradie=poradie+1;
             System.out.println("\nPoradie hraca je: "+ poradie);
             System.out.println("Ak si zapisal vsetkych hracov stlac 0 ak chces dalej zapisovat hracov stlac 1:");
             premenna = pomocna.nextLine();
 
         }
+        if (poradie==1) {
+            System.err.println("Iba jeden hrac nemoze hrat!");
+            System.exit(0);
+        }
         System.out.println("Hra zacina!");
+
 
 
 
@@ -43,7 +52,8 @@ public class Assignment1 {
 
 
     public  void monopoly() {
-        this.nacitavajHracov();
+        HraciaDoska doska = new HraciaDoska();
+        this.nacitavajHracov(doska);
     }
 
 
