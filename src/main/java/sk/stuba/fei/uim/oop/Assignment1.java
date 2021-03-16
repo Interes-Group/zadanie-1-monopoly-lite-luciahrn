@@ -16,7 +16,9 @@ public class Assignment1 {
         System.out.println("Zadaj svoje meno");
 
         String userName = myObj.nextLine();  // Read user input
+        Player hrac= new Player(userName);
         System.out.println("Meno je : " + userName);  // Output user input
+
 
     }
 
