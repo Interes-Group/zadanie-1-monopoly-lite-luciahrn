@@ -6,7 +6,7 @@ import java.lang.String;
 public class PoleVazanie extends HraciePole{
     private String pocetStati;
     public PoleVazanie(String poleName, BigDecimal cena, BigDecimal stojne) {
-        super(poleName, cena, stojne);
+        super(poleName, cena, stojne,false);
     }
 
     public String getPocetStati() {

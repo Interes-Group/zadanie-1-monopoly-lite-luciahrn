@@ -2,9 +2,12 @@ package sk.stuba.fei.uim.oop;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HraciaDoska {
+    private Map<Player,Integer> pozicie = new HashMap<Player,Integer>();
 
     private List<Player> players = new ArrayList<>();
     private final List<HraciePole> policka = new ArrayList<>();
@@ -15,8 +18,9 @@ public class HraciaDoska {
         policka.add(pole2);
         HraciePole pole3 = new Nehnutelnost("Základná škola",new BigDecimal(2000),new BigDecimal(200));
         policka.add(pole3);
-        //HraciePole pole4 = new PoleSanca();
-       // policka.add(pole4);
+        HraciePole pole4 = new HraciePole("Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
+        };
+        policka.add(pole4);
         HraciePole pole5 = new Nehnutelnost("Hasičská zbrojnica",new BigDecimal(2200),new BigDecimal(300));
         policka.add(pole5);
         HraciePole pole6 = new Nehnutelnost("Nemocnica",new BigDecimal(2300),new BigDecimal(400));
@@ -27,8 +31,9 @@ public class HraciaDoska {
         policka.add(pole8);
         HraciePole pole9 = new Nehnutelnost("Kostol",new BigDecimal(2600),new BigDecimal(550));
         policka.add(pole9);
-        //HraciePole pole10 = new PoleSanca();
-       // policka.add(pole10);
+        HraciePole pole10 = new HraciePole("Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
+        };
+        policka.add(pole10);
         HraciePole pole11 = new Nehnutelnost("Galéria",new BigDecimal(2700),new BigDecimal(600));
         policka.add(pole11);
         HraciePole pole12 = new Nehnutelnost("Reštaurácia",new BigDecimal(2800),new BigDecimal(650));
@@ -39,8 +44,9 @@ public class HraciaDoska {
         policka.add(pole14);
         HraciePole pole15 = new Nehnutelnost("Budova súdu",new BigDecimal(3000),new BigDecimal(750));
         policka.add(pole15);
-        //HraciePole pole16 = new PoleSanca();
-        //policka.add(pole16);
+        HraciePole pole16 = new HraciePole("Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
+        };
+        policka.add(pole16);
         HraciePole pole17 = new Nehnutelnost("Laboratórium",new BigDecimal(3000),new BigDecimal(750));
         policka.add(pole17);
         HraciePole pole18 = new Nehnutelnost("Divadlo",new BigDecimal(3100),new BigDecimal(800));
@@ -51,8 +57,9 @@ public class HraciaDoska {
         policka.add(pole20);
         HraciePole pole21 = new Nehnutelnost("Mrakodrap",new BigDecimal(3300),new BigDecimal(850));
         policka.add(pole21);
-        //HraciePole pole22 = new PoleSanca();
-        //policka.add(pole22);
+        HraciePole pole22 = new HraciePole("Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
+        };
+        policka.add(pole22);
         HraciePole pole23 = new Nehnutelnost("Parlament",new BigDecimal(3400),new BigDecimal(850));
         policka.add(pole23);
         HraciePole pole24 = new Nehnutelnost("Palác prezidenta",new BigDecimal(4000),new BigDecimal(1000));
@@ -83,4 +90,17 @@ public class HraciaDoska {
             players.remove(out);
         }
     }
+
+    public int getPoziciaHraca(Player hrac) {
+        return pozicie.get(hrac);
+    }
+
+    public void setPoziciaHraca(Player hrac, int hodKockou) {
+        int povodnaPozicia  = getPoziciaHraca(hrac);
+        int novaPozicia = povodnaPozicia + hodKockou;
+        pozicie.replace(hrac,novaPozicia);
+    }
+
+    public HraciePole getPolickoNaPozici  (int pole) {
+        return policka.get(pole);    }
 }
