@@ -5,6 +5,7 @@ import java.lang.String;
 
 public class Nehnutelnost extends HraciePole{
     private String owner;
+
     public Nehnutelnost(String poleName, BigDecimal cena, BigDecimal stojne) {
         super(poleName, cena, stojne,false);
     }
@@ -16,4 +17,6 @@ public class Nehnutelnost extends HraciePole{
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+
 }

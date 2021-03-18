@@ -14,16 +14,16 @@ public class HraciaDoska {
     {
         HraciePole pole1 = new PoleStart("Start",new BigDecimal(0),new BigDecimal(0));
         policka.add(pole1);
-        HraciePole pole2 = new Nehnutelnost("Potraviny",new BigDecimal(1200),new BigDecimal(100));
+        HraciePole pole2 = new Nehnutelnost("Potraviny",new BigDecimal(1000),new BigDecimal(100));
         policka.add(pole2);
-        HraciePole pole3 = new Nehnutelnost("Základná škola",new BigDecimal(2000),new BigDecimal(200));
+        HraciePole pole3 = new Nehnutelnost("Základná škola",new BigDecimal(1000),new BigDecimal(200));
         policka.add(pole3);
         HraciePole pole4 = new HraciePole("Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
         };
         policka.add(pole4);
-        HraciePole pole5 = new Nehnutelnost("Hasičská zbrojnica",new BigDecimal(2200),new BigDecimal(300));
+        HraciePole pole5 = new Nehnutelnost("Hasičská zbrojnica",new BigDecimal(1000),new BigDecimal(300));
         policka.add(pole5);
-        HraciePole pole6 = new Nehnutelnost("Nemocnica",new BigDecimal(2300),new BigDecimal(400));
+        HraciePole pole6 = new Nehnutelnost("Nemocnica",new BigDecimal(1000),new BigDecimal(400));
         policka.add(pole6);
         HraciePole pole7 = new PoleVazanie("Väzenie",new BigDecimal(0),new BigDecimal(0));
         policka.add(pole7);
@@ -103,4 +103,8 @@ public class HraciaDoska {
 
     public HraciePole getPolickoNaPozici  (int pole) {
         return policka.get(pole);    }
+
+
+
+
 }

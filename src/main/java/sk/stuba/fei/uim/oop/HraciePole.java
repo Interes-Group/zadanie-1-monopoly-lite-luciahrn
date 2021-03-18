@@ -10,6 +10,7 @@ public class  HraciePole {
     private Nehnutelnost nehnutelnost;
     private boolean sanca = false;
 
+
     public HraciePole(String poleName, BigDecimal cena, BigDecimal stojne, boolean jeSanca) {
         this.poleName = poleName;
         this.cenaPola = cena;
@@ -32,4 +33,6 @@ public class  HraciePole {
     public boolean isSanca() {
         return sanca;
     }
+
+
 }

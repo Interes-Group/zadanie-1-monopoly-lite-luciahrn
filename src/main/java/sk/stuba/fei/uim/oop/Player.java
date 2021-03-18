@@ -14,7 +14,7 @@ public class Player {
     }
 
     public void pridajPeniaze(BigDecimal money) {
-        this.peniaze.add(money);
+        this.peniaze = this.peniaze.add(money);
         System.out.println("V hre konci"+this);
 
         }
@@ -22,7 +22,7 @@ public class Player {
 
 
     public void odoberPeniaze(BigDecimal money) throws NotEnoughMoney {
-        this.peniaze.add(money);
+        this.peniaze = this.peniaze.subtract(money);
         if(this.peniaze.compareTo(new BigDecimal(0))<0){
             System.out.println("V hre konci"+this);
             throw new NotEnoughMoney();
