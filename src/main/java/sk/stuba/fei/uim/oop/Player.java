@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Player {
     private String playerName;
     private BigDecimal peniaze=new BigDecimal(2000);
-    private boolean presielStartom;
+    private int kolkoUzJeNaPoliVazenie=0;
     private int pole;
 
 
@@ -52,6 +52,14 @@ public class Player {
 
     public BigDecimal getPeniaze() {
         return peniaze;
+    }
+
+    public int getKolkoUzJeNaPoliVazenie() {
+        return kolkoUzJeNaPoliVazenie;
+    }
+
+    public void setKolkoUzJeNaPoliVazenie(int kolkoUzJeNaPoliVazenie) {
+        this.kolkoUzJeNaPoliVazenie = kolkoUzJeNaPoliVazenie;
     }
 }
 

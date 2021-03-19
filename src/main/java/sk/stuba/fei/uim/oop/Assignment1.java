@@ -12,15 +12,18 @@ public class Assignment1 {
         super();
     }
 
+
+
+
     public void kupNehnutelnost (HraciaDoska doska, int pole,Player hrac) throws NotEnoughMoney {
         Scanner pomocna = new Scanner(System.in);
         Nehnutelnost neh = (Nehnutelnost) doska.getPolickoNaPozici(pole);
         BigDecimal peniazeHraca=hrac.getPeniaze();
         BigDecimal cena = neh.getCena();
-        int porovnanie=  (peniazeHraca.compareTo(cena));
+        //boolean porovnanie=  (peniazeHraca.compareTo(cena)>=0);
         if (neh.getOwner()==null) {     //ak nema owner
 
-            if (porovnanie==1) {
+            if (peniazeHraca.compareTo(cena)>=0) {
                 System.out.println("Chces kupit nehnutelnost " + doska.getPolickoNaPozici(pole).getPoleName() + " za " + doska.getPolickoNaPozici(pole).getCena() + "? Y/N");
                 String premenna = pomocna.nextLine();
                 if (premenna.equals("Y")) {
@@ -29,6 +32,7 @@ public class Assignment1 {
 
                     BigDecimal platba = doska.getPolickoNaPozici(pole).getCena();
                     hrac.odoberPeniaze(platba);
+
                     System.out.println("Aktualny stav na tvojom ucte je " + hrac.getPeniaze() + "\n");
                 }
             }
@@ -46,13 +50,54 @@ public class Assignment1 {
         }
     }
 
+    public void stojisVoVazeni (HraciaDoska doska,Player hrac) {
+        if (hrac.getKolkoUzJeNaPoliVazenie()==0) {
+            hrac.setKolkoUzJeNaPoliVazenie(1);
+        }
+
+        else if (hrac.getKolkoUzJeNaPoliVazenie()==1) {
+            hrac.setKolkoUzJeNaPoliVazenie(2);
+        }
+
+        else if (hrac.getKolkoUzJeNaPoliVazenie()==2) {
+            hrac.setKolkoUzJeNaPoliVazenie(0);
+        }
+
+    }
+
+    public void vyberTypPola(HraciaDoska doska,int pole,Player hrac)  {
+
+        if (doska.getPolickoNaPozici(pole) instanceof Nehnutelnost) {
+            try {
+                kupNehnutelnost(doska, pole, hrac);
+            } catch (NotEnoughMoney e) {
+                System.out.println("dbefyhe");
+            }
+        }
+        if (doska.getPolickoNaPozici(pole) instanceof PolePlatbaDane)  {
+            PolePlatbaDane dan = (PolePlatbaDane) doska.getPolickoNaPozici(pole);
+            System.out.println("Musíš zaplatiť daň 500!");
+            try {
+                hrac.odoberPeniaze(dan.getDan());
+            }catch (NotEnoughMoney e) {
+                System.out.println("dbefyhe");
+            }
+        }
+
+        if (doska.getPolickoNaPozici(pole) instanceof PoleVazanie) {
+            System.out.println("Dostal si sa na špeciálne políčko Väzenia, stojíš dve kolá!");
+            hrac.setKolkoUzJeNaPoliVazenie(1);
+
+        }
+
+
+    }
 
 
     public void spravTah(HraciaDoska doska) {
         Random rand = new Random();
         List <Player> hraci=doska.getPlayers();
-        int pocet = 0;
-        int maxPoli=24;
+        int maxPoli=23;
         int min=1;
         int max=6;
         BigDecimal money=new BigDecimal(2000);
@@ -64,38 +109,35 @@ public class Assignment1 {
                 System.out.println("Stav uctu hraca: "+ hrac.getPeniaze());
                 int predoslaPozicia=hrac.getPole();
                 int hodKockou= rand.nextInt(max - min) + min;
-                System.out.println("Aktualny hod kockou: "+ hodKockou);
-                hrac.zadajPole(hodKockou);
+                System.out.println("VAZZZ"+hrac.getKolkoUzJeNaPoliVazenie());
+                if (hrac.getKolkoUzJeNaPoliVazenie()==0) {
+                    System.out.println("Aktualny hod kockou: " + hodKockou);
 
-                int aktualnaPozicia=predoslaPozicia+hodKockou;
-                if (aktualnaPozicia>maxPoli){
-                    hrac.pridajPeniaze(money);
-                    aktualnaPozicia=aktualnaPozicia-(maxPoli-1);
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Posunul si sa na policko: "+ doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
-                hrac.setPole(aktualnaPozicia);
-                if( doska.getPolickoNaPozici(aktualnaPozicia) instanceof Nehnutelnost) {
+                    hrac.zadajPole(hodKockou);
+
+                    int aktualnaPozicia = predoslaPozicia + hodKockou;
+                    if (aktualnaPozicia > maxPoli) {
+                        hrac.pridajPeniaze(money);
+                        aktualnaPozicia = aktualnaPozicia % 23;
+                    }
                     try {
-                        kupNehnutelnost(doska, aktualnaPozicia, hrac);
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch(NotEnoughMoney e) {
-                        System.out.println("dbefyhe");
-                    }
-
+                    System.out.println("Posunul si sa na policko: " + doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
+                    hrac.setPole(aktualnaPozicia);
+                    vyberTypPola(doska, aktualnaPozicia, hrac);
+                } else {
+                    stojisVoVazeni(doska,hrac);
+                    System.out.println("Stale stojis vo vazeni!");
                 }
-
-
-
+                }
             }
 
         }
 
-    }
+
 
     public  Player getPlayer() {
 
@@ -111,7 +153,7 @@ public class Assignment1 {
 
     }
 
-    public  void nacitavajHracov(HraciaDoska doska) {
+    public  void nacitavajHracov(HraciaDoska doska)  {
         Scanner pomocna = new Scanner(System.in);
         System.out.println("Pre zacatie hry a zaevidovanie hracov stlac 1:");
         String  premenna = pomocna.nextLine();
@@ -138,7 +180,7 @@ public class Assignment1 {
 
 
 
-    public  void monopoly() {
+    public  void monopoly()  {
         HraciaDoska doska = new HraciaDoska();
         this.nacitavajHracov(doska);
     }
