@@ -14,15 +14,33 @@ public class Assignment1 {
 
     public void kupNehnutelnost (HraciaDoska doska, int pole,Player hrac) throws NotEnoughMoney {
         Scanner pomocna = new Scanner(System.in);
-        System.out.println("Chces kupit nehnutelnost "+doska.getPolickoNaPozici(pole).getPoleName()+" za "+ doska.getPolickoNaPozici(pole).getCena()+"? Y/N\n");
-        String  premenna = pomocna.nextLine();
-        if (premenna.equals("Y")) {
-            System.out.println("Prave si kupil" + doska.getPolickoNaPozici(pole).getPoleName());
+        Nehnutelnost neh = (Nehnutelnost) doska.getPolickoNaPozici(pole);
+        BigDecimal peniazeHraca=hrac.getPeniaze();
+        BigDecimal cena = neh.getCena();
+        int porovnanie=  (peniazeHraca.compareTo(cena));
+        if (neh.getOwner()==null) {     //ak nema owner
 
-            BigDecimal platba=doska.getPolickoNaPozici(pole).getCena();
-            hrac.odoberPeniaze(platba);
-            System.out.println("Aktualny stav na tvojom ucte je" +hrac.getPeniaze());
+            if (porovnanie==1) {
+                System.out.println("Chces kupit nehnutelnost " + doska.getPolickoNaPozici(pole).getPoleName() + " za " + doska.getPolickoNaPozici(pole).getCena() + "? Y/N");
+                String premenna = pomocna.nextLine();
+                if (premenna.equals("Y")) {
+                    System.out.println("Prave si kupil " + doska.getPolickoNaPozici(pole).getPoleName());
+                    neh.setOwner(hrac);
 
+                    BigDecimal platba = doska.getPolickoNaPozici(pole).getCena();
+                    hrac.odoberPeniaze(platba);
+                    System.out.println("Aktualny stav na tvojom ucte je " + hrac.getPeniaze() + "\n");
+                }
+            }
+            else  {
+                System.out.println("Nemáš peniaze na tuto nehnutelnost!!");
+            }
+
+        }
+        else if (neh.getOwner()!=null) { //zaplat stojne
+            System.out.println("Stupil si na policko hraca " + neh.getOwner() + " a musis mu zaplatit stojne " + neh.getStojne() +"!");
+            hrac.odoberPeniaze(neh.getStojne());
+            neh.getOwner().pridajPeniaze(neh.getStojne());
 
 
         }
@@ -35,16 +53,18 @@ public class Assignment1 {
         List <Player> hraci=doska.getPlayers();
         int pocet = 0;
         int maxPoli=24;
+        int min=1;
+        int max=6;
         BigDecimal money=new BigDecimal(2000);
 
         while (true) {
             for (Player hrac:hraci) {
 
                 System.out.println("["+ hrac+ "]" );
-                System.out.println(" Stav uctu hraca: "+ hrac.getPeniaze());
+                System.out.println("Stav uctu hraca: "+ hrac.getPeniaze());
                 int predoslaPozicia=hrac.getPole();
-                int hodKockou=rand.nextInt(6);
-                System.out.println(" Aktualny hod kockou: "+ hodKockou);
+                int hodKockou= rand.nextInt(max - min) + min;
+                System.out.println("Aktualny hod kockou: "+ hodKockou);
                 hrac.zadajPole(hodKockou);
 
                 int aktualnaPozicia=predoslaPozicia+hodKockou;
@@ -57,11 +77,9 @@ public class Assignment1 {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Posunul sa na policko: "+ doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
+                System.out.println("Posunul si sa na policko: "+ doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
                 hrac.setPole(aktualnaPozicia);
-                if( doska.getPolickoNaPozici(aktualnaPozicia) instanceof Nehnutelnost)
-
-                if (doska.getPolickoNaPozici(aktualnaPozicia).getStojne().compareTo(new BigDecimal(0))==1) {
+                if( doska.getPolickoNaPozici(aktualnaPozicia) instanceof Nehnutelnost) {
                     try {
                         kupNehnutelnost(doska, aktualnaPozicia, hrac);
                     }

@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 import java.lang.String;
 
 public class Nehnutelnost extends HraciePole{
-    private String owner;
+    private Player owner=null;
 
     public Nehnutelnost(String poleName, BigDecimal cena, BigDecimal stojne) {
         super(poleName, cena, stojne,false);
     }
 
-    public String getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 

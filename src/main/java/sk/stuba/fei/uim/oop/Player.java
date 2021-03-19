@@ -15,7 +15,7 @@ public class Player {
 
     public void pridajPeniaze(BigDecimal money) {
         this.peniaze = this.peniaze.add(money);
-        System.out.println("V hre konci"+this);
+
 
         }
 
