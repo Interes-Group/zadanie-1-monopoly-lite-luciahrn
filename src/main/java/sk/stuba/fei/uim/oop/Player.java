@@ -61,5 +61,7 @@ public class Player {
     public void setKolkoUzJeNaPoliVazenie(int kolkoUzJeNaPoliVazenie) {
         this.kolkoUzJeNaPoliVazenie = kolkoUzJeNaPoliVazenie;
     }
+
+
 }
 

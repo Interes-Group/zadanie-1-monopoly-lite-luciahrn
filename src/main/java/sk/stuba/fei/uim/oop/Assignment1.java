@@ -20,7 +20,6 @@ public class Assignment1 {
         Nehnutelnost neh = (Nehnutelnost) doska.getPolickoNaPozici(pole);
         BigDecimal peniazeHraca=hrac.getPeniaze();
         BigDecimal cena = neh.getCena();
-        //boolean porovnanie=  (peniazeHraca.compareTo(cena)>=0);
         if (neh.getOwner()==null) {     //ak nema owner
 
             if (peniazeHraca.compareTo(cena)>=0) {
@@ -42,9 +41,11 @@ public class Assignment1 {
 
         }
         else if (neh.getOwner()!=null) { //zaplat stojne
-            System.out.println("Stupil si na policko hraca " + neh.getOwner() + " a musis mu zaplatit stojne " + neh.getStojne() +"!");
-            hrac.odoberPeniaze(neh.getStojne());
-            neh.getOwner().pridajPeniaze(neh.getStojne());
+            if (!neh.getOwner().equals(hrac)) {
+                System.out.println("Stupil si na policko hraca " + neh.getOwner() + " a musis mu zaplatit stojne " + neh.getStojne() + "!");
+                hrac.odoberPeniaze(neh.getStojne());
+                neh.getOwner().pridajPeniaze(neh.getStojne());
+            }
 
 
         }
@@ -90,6 +91,13 @@ public class Assignment1 {
 
         }
 
+        if (doska.getPolickoNaPozici(pole) instanceof PolePolicia) {
+            System.out.println("Dostal si sa na špeciálne políčko Polície, ideš na políčko Väzenie a stojíš 2 kolá!");
+            hrac.setPole(6);
+            hrac.setKolkoUzJeNaPoliVazenie(1);
+
+        }
+
 
     }
 
@@ -109,11 +117,11 @@ public class Assignment1 {
                 System.out.println("Stav uctu hraca: "+ hrac.getPeniaze());
                 int predoslaPozicia=hrac.getPole();
                 int hodKockou= rand.nextInt(max - min) + min;
-                System.out.println("VAZZZ"+hrac.getKolkoUzJeNaPoliVazenie());
                 if (hrac.getKolkoUzJeNaPoliVazenie()==0) {
                     System.out.println("Aktualny hod kockou: " + hodKockou);
 
                     hrac.zadajPole(hodKockou);
+
 
                     int aktualnaPozicia = predoslaPozicia + hodKockou;
                     if (aktualnaPozicia > maxPoli) {
@@ -121,7 +129,7 @@ public class Assignment1 {
                         aktualnaPozicia = aktualnaPozicia % 23;
                     }
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
