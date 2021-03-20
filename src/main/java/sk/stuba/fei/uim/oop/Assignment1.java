@@ -7,9 +7,10 @@ import java.util.Random;
 
 
 public class Assignment1 {
-
+    private Sance sance=new Sance();
     public Assignment1(){
         super();
+
     }
 
 
@@ -66,7 +67,7 @@ public class Assignment1 {
 
     }
 
-    public void vyberTypPola(HraciaDoska doska,int pole,Player hrac)  {
+    public void vyberTypPola(HraciaDoska doska,int pole,Player hrac)   {
 
         if (doska.getPolickoNaPozici(pole) instanceof Nehnutelnost) {
             try {
@@ -95,6 +96,29 @@ public class Assignment1 {
             System.out.println("Dostal si sa na špeciálne políčko Polície, ideš na políčko Väzenie a stojíš 2 kolá!");
             hrac.setPole(6);
             hrac.setKolkoUzJeNaPoliVazenie(1);
+
+        }
+        if (doska.getPolickoNaPozici(pole).isSanca()) {
+            System.out.println("Dostal si sa na špeciálne políčko Šanca, ťaháš si kartu ŠANCA!");
+            Sanca kartaSanca=sance.getVrchnaSanca();
+            System.out.println("KARTA ŠANCA: "+kartaSanca.getName());
+            if (!kartaSanca.getPenaznyBonus().equals(new BigDecimal(0))) {
+                hrac.pridajPeniaze(kartaSanca.getPenaznyBonus());
+            }
+            if (!kartaSanca.getZaplatenieBanke().equals(new BigDecimal(0))) {
+                try {
+                    hrac.odoberPeniaze(kartaSanca.getZaplatenieBanke());
+                }
+                catch (NotEnoughMoney e) {
+                    System.out.println("Hrac v hre konci!");
+                }
+            }
+
+            if (kartaSanca.getPresunutieNaPole()>=0) {
+                hrac.setPole(kartaSanca.getPresunutieNaPole());
+            }
+
+            sance.returnSanca(kartaSanca);
 
         }
 
