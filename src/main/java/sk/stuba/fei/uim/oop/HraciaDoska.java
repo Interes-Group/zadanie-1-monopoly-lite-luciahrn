@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HraciaDoska {
     private Map<Player,Integer> pozicie = new HashMap<Player,Integer>();
 
-    private List<Player> players = new ArrayList<>();
+    private List<Player> players = new CopyOnWriteArrayList<>();
     private final List<HraciePole> policka = new ArrayList<>();
     {
         HraciePole pole1 = new PoleStart("ŠTART",new BigDecimal(0),new BigDecimal(0));
@@ -84,10 +86,14 @@ public class HraciaDoska {
             //vyhral, koniec hry
             players.remove(out);
             //vitaz co zostal, koniec hry
+            System.out.println("Hráč ktorý ostal v hre je VÍŤAZ,KONIEC HRY! Víťazom je hráč s menom: " + players.get(0));
+            System.exit(0);
 
         } else {
-            //hrac prehral
+            System.out.println("Hráč" + out+ " PREHRAL");
+
             players.remove(out);
+
         }
     }
 
