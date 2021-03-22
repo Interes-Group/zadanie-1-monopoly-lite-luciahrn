@@ -117,8 +117,33 @@ public class Assignment1 {
 
     }
 
+    public void hodKockou (Player hrac,int min, int max, int maxPoli,BigDecimal money, HraciaDoska doska,int hodKockou,int predoslaPozicia) {
 
-    public void spravTah(HraciaDoska doska) {
+        System.out.println("Aktualny hod kockou: " + hodKockou);
+        hrac.zadajPole(hodKockou);
+        int aktualnaPozicia = predoslaPozicia + hodKockou;
+        if (aktualnaPozicia > maxPoli) {
+            System.out.println("Presiel si cez start dostavas peniaze!!");
+            hrac.pridajPeniaze(money);
+            aktualnaPozicia = aktualnaPozicia % 24;
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Posunul si sa na policko: "+aktualnaPozicia + " - " + doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
+        hrac.setPole(aktualnaPozicia);
+        try {
+            vyberTypPola(doska, aktualnaPozicia, hrac);
+        }catch (NotEnoughMoney e) {
+            doska.vyhodHraca(hrac);
+        }
+
+    }
+
+
+    public void spravTah(HraciaDoska doska)  {
         Random rand = new Random();
         List <Player> hraci=doska.getPlayers();
         int maxPoli=23;
@@ -134,30 +159,9 @@ public class Assignment1 {
                 int predoslaPozicia=hrac.getPole();
                 int hodKockou= rand.nextInt(max - min) + min;
                 if (hrac.getKolkoUzJeNaPoliVazenie()==0) {
-                    System.out.println("Aktualny hod kockou: " + hodKockou);
-
-                    hrac.zadajPole(hodKockou);
-
-
-                    int aktualnaPozicia = predoslaPozicia + hodKockou;
-                    if (aktualnaPozicia > maxPoli) {
-                        System.out.println("Presiel si cez start dostavas peniaze!!");
-                        hrac.pridajPeniaze(money);
-                        aktualnaPozicia = aktualnaPozicia % 24;
-                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("Posunul si sa na policko: "+aktualnaPozicia + " - " + doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
-                    hrac.setPole(aktualnaPozicia);
-                    try {
-                        vyberTypPola(doska, aktualnaPozicia, hrac);
-                    }catch (NotEnoughMoney e) {
-                        doska.vyhodHraca(hrac);
-                    }
-                } else {
+                    hodKockou (hrac,min, max, maxPoli,money,doska,hodKockou,predoslaPozicia);
+                }
+                else {
                     stojisVoVazeni(doska,hrac);
                     System.out.println("Stale stojis vo vazeni!");
                 }
@@ -168,13 +172,16 @@ public class Assignment1 {
 
 
 
-    public  Player getPlayer() {
+    public  Player getPlayer(Scanner myObj) throws ZlyInput {
 
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        //Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 
         System.out.println("Zadaj svoje meno");
 
         String userName = myObj.nextLine();  // Read user input
+        if(userName.trim().equals("")) {
+            throw new ZlyInput("UserName je neplatny retazec");
+        }
         Player hrac= new Player(userName);
         System.out.println("Meno je : " + userName);  // Output user input
 
@@ -182,17 +189,31 @@ public class Assignment1 {
 
     }
 
-    public  void nacitavajHracov(HraciaDoska doska)  {
+    public void nacitavajHracov(HraciaDoska doska)  {
         Scanner pomocna = new Scanner(System.in);
         System.out.println("Pre zacatie hry a zaevidovanie hracov stlac 1:");
         String  premenna = pomocna.nextLine();
+        if(!premenna.trim().equals("1")) {
+            System.out.println("Zlý vstup! Spusti hru odznova!!");
+            System.exit(0);
+        }
         int poradie=0;
         while (premenna.equals("1")) {
-            doska.addPlayer(getPlayer());
+            try {
+
+                doska.addPlayer(getPlayer(pomocna));
+            }catch (ZlyInput e) {
+                System.out.println("Hráč musí mať nejaké meno!! Spusti hru odznova!!");
+                System.exit(0);
+            }
             poradie=poradie+1;
             System.out.println("\nPoradie hraca je: "+ poradie);
             System.out.println("Ak si zapisal vsetkych hracov stlac 0 ak chces dalej zapisovat hracov stlac 1:");
             premenna = pomocna.nextLine();
+            if( (!premenna.trim().equals("1")) && !premenna.trim().equals("0") ) {
+                System.out.println("Zlý vstup! Spusti hru odznova!!");
+                System.exit(0);
+            }
 
         }
         if (poradie==1) {
@@ -201,8 +222,6 @@ public class Assignment1 {
         }
         System.out.println("Hra zacina!");
         spravTah(doska);
-
-
 
     }
 

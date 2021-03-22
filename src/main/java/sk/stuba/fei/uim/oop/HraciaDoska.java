@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HraciaDoska {
-    private Map<Player,Integer> pozicie = new HashMap<Player,Integer>();
+    private Map<Player,Integer> pozicie = new HashMap<>();
 
     private List<Player> players = new CopyOnWriteArrayList<>();
     private final List<HraciePole> policka = new ArrayList<>();
@@ -81,6 +81,20 @@ public class HraciaDoska {
 
     }
 
+    public void zbavHracaNehnutelnosti( Player out) {
+        for (int i=0;i<23;i++) {
+            if (getPolickoNaPozici(i) instanceof Nehnutelnost) {
+                Nehnutelnost neh = (Nehnutelnost) getPolickoNaPozici(i);
+                if (out.equals(neh.getOwner())) {
+                    neh.setOwner(null);
+                    System.out.println("Do hry sa vracia nehnutelnost:" +neh.getPoleName());
+
+                }
+            }
+
+        }
+    }
+
     public void vyhodHraca(Player out) {
         if(players.size()==2) {
             //vyhral, koniec hry
@@ -91,6 +105,7 @@ public class HraciaDoska {
 
         } else {
             System.out.println("Hráč" + out+ " PREHRAL");
+            zbavHracaNehnutelnosti(out);
 
             players.remove(out);
 
