@@ -1,5 +1,4 @@
 package sk.stuba.fei.uim.oop;
-import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
@@ -13,32 +12,34 @@ public class Assignment1 {
 
     }
 
+    public void kupNehnutelnostBezVlastnika (BigDecimal peniazeHraca,BigDecimal cena,Scanner pomocna,int pole, HraciaDoska doska,Player hrac,Nehnutelnost neh) throws  NotEnoughMoney{
+        if (peniazeHraca.compareTo(cena)>=0) {
+            System.out.println("Chces kupit nehnutelnost " + doska.getPolickoNaPozici(pole).getPoleName() + " za " + doska.getPolickoNaPozici(pole).getCena() + "? Y/N");
+            String premenna = pomocna.nextLine();
+            if (premenna.equals("Y")) {
+                System.out.println("Prave si kupil " + doska.getPolickoNaPozici(pole).getPoleName());
+                neh.setOwner(hrac);
+
+                BigDecimal platba = doska.getPolickoNaPozici(pole).getCena();
+                hrac.odoberPeniaze(platba);
+
+                System.out.println("Aktualny stav na tvojom ucte je " + hrac.getPeniaze() + "\n");
+            }
+        }
+        else  {
+            System.out.println("Nemáš peniaze na tuto nehnutelnost!!");
+        }
+
+    }
 
 
-
-    public void kupNehnutelnost (HraciaDoska doska, int pole,Player hrac) throws NotEnoughMoney {
-        Scanner pomocna = new Scanner(System.in);
+    public void kupNehnutelnost (HraciaDoska doska, int pole,Player hrac,Scanner pomocna) throws NotEnoughMoney {
         Nehnutelnost neh = (Nehnutelnost) doska.getPolickoNaPozici(pole);
         BigDecimal peniazeHraca=hrac.getPeniaze();
         BigDecimal cena = neh.getCena();
         if (neh.getOwner()==null) {     //ak nema owner
 
-            if (peniazeHraca.compareTo(cena)>=0) {
-                System.out.println("Chces kupit nehnutelnost " + doska.getPolickoNaPozici(pole).getPoleName() + " za " + doska.getPolickoNaPozici(pole).getCena() + "? Y/N");
-                String premenna = pomocna.nextLine();
-                if (premenna.equals("Y")) {
-                    System.out.println("Prave si kupil " + doska.getPolickoNaPozici(pole).getPoleName());
-                    neh.setOwner(hrac);
-
-                    BigDecimal platba = doska.getPolickoNaPozici(pole).getCena();
-                    hrac.odoberPeniaze(platba);
-
-                    System.out.println("Aktualny stav na tvojom ucte je " + hrac.getPeniaze() + "\n");
-                }
-            }
-            else  {
-                System.out.println("Nemáš peniaze na tuto nehnutelnost!!");
-            }
+            kupNehnutelnostBezVlastnika (peniazeHraca,cena,pomocna,pole, doska,hrac,neh);
 
         }
         else if (neh.getOwner()!=null) { //zaplat stojne
@@ -67,11 +68,32 @@ public class Assignment1 {
 
     }
 
-    public void vyberTypPola(HraciaDoska doska,int pole,Player hrac) throws NotEnoughMoney  {
+    public void kartaSanca(Player hrac ) throws NotEnoughMoney {
+        System.out.println("Dostal si sa na špeciálne políčko Šanca, ťaháš si kartu ŠANCA!");
+        Sanca kartaSanca=sance.getVrchnaSanca();
+        System.out.println("KARTA ŠANCA: "+kartaSanca.getName());
+        if (!kartaSanca.getPenaznyBonus().equals(new BigDecimal(0))) {
+            hrac.pridajPeniaze(kartaSanca.getPenaznyBonus());
+        }
+        if (!kartaSanca.getZaplatenieBanke().equals(new BigDecimal(0))) {
+
+            hrac.odoberPeniaze(kartaSanca.getZaplatenieBanke());
+
+        }
+
+        if (kartaSanca.getPresunutieNaPole()>=0) {
+            hrac.setPole(kartaSanca.getPresunutieNaPole());
+        }
+
+        sance.returnSanca(kartaSanca);
+
+    }
+
+    public void vyberTypPola(HraciaDoska doska,int pole,Player hrac,Scanner pomocna) throws NotEnoughMoney  {
 
         if (doska.getPolickoNaPozici(pole) instanceof Nehnutelnost) {
 
-                kupNehnutelnost(doska, pole, hrac);
+                kupNehnutelnost(doska, pole, hrac,pomocna);
 
         }
         if (doska.getPolickoNaPozici(pole) instanceof PolePlatbaDane)  {
@@ -94,30 +116,14 @@ public class Assignment1 {
 
         }
         if (doska.getPolickoNaPozici(pole).isSanca()) {
-            System.out.println("Dostal si sa na špeciálne políčko Šanca, ťaháš si kartu ŠANCA!");
-            Sanca kartaSanca=sance.getVrchnaSanca();
-            System.out.println("KARTA ŠANCA: "+kartaSanca.getName());
-            if (!kartaSanca.getPenaznyBonus().equals(new BigDecimal(0))) {
-                hrac.pridajPeniaze(kartaSanca.getPenaznyBonus());
-            }
-            if (!kartaSanca.getZaplatenieBanke().equals(new BigDecimal(0))) {
-
-                    hrac.odoberPeniaze(kartaSanca.getZaplatenieBanke());
-
-            }
-
-            if (kartaSanca.getPresunutieNaPole()>=0) {
-                hrac.setPole(kartaSanca.getPresunutieNaPole());
-            }
-
-            sance.returnSanca(kartaSanca);
+            kartaSanca(hrac);
 
         }
 
 
     }
 
-    public void hodKockou (Player hrac,int min, int max, int maxPoli,BigDecimal money, HraciaDoska doska,int hodKockou,int predoslaPozicia) {
+    public void hodKockou (Player hrac,int min, int max, int maxPoli,BigDecimal money, HraciaDoska doska,int hodKockou,int predoslaPozicia,Scanner pomocna) {
 
         System.out.println("Aktualny hod kockou: " + hodKockou);
         hrac.zadajPole(hodKockou);
@@ -135,7 +141,7 @@ public class Assignment1 {
         System.out.println("Posunul si sa na policko: "+aktualnaPozicia + " - " + doska.getPolickoNaPozici(aktualnaPozicia).getPoleName());
         hrac.setPole(aktualnaPozicia);
         try {
-            vyberTypPola(doska, aktualnaPozicia, hrac);
+            vyberTypPola(doska, aktualnaPozicia, hrac,pomocna);
         }catch (NotEnoughMoney e) {
             doska.vyhodHraca(hrac);
         }
@@ -143,7 +149,7 @@ public class Assignment1 {
     }
 
 
-    public void spravTah(HraciaDoska doska)  {
+    public void spravTah(HraciaDoska doska,Scanner pomocna)  {
         Random rand = new Random();
         List <Player> hraci=doska.getPlayers();
         int maxPoli=23;
@@ -159,7 +165,7 @@ public class Assignment1 {
                 int predoslaPozicia=hrac.getPole();
                 int hodKockou= rand.nextInt(max - min) + min;
                 if (hrac.getKolkoUzJeNaPoliVazenie()==0) {
-                    hodKockou (hrac,min, max, maxPoli,money,doska,hodKockou,predoslaPozicia);
+                    hodKockou (hrac,min, max, maxPoli,money,doska,hodKockou,predoslaPozicia,pomocna);
                 }
                 else {
                     stojisVoVazeni(doska,hrac);
@@ -191,7 +197,7 @@ public class Assignment1 {
 
     public void nacitavajHracov(HraciaDoska doska)  {
         Scanner pomocna = new Scanner(System.in);
-        System.out.println("Pre zacatie hry a zaevidovanie hracov stlac 1:");
+        System.out.println("Pre zacatie hry a zaevidovanie hracov stlac 1 :");
         String  premenna = pomocna.nextLine();
         if(!premenna.trim().equals("1")) {
             System.out.println("Zlý vstup! Spusti hru odznova!!");
@@ -207,6 +213,10 @@ public class Assignment1 {
                 System.exit(0);
             }
             poradie=poradie+1;
+            if ( poradie >6) {
+                System.err.println("Neplatny pocet hracov! Minimum hracov je 2 a maximum je 6!");
+                System.exit(0);
+            }
             System.out.println("\nPoradie hraca je: "+ poradie);
             System.out.println("Ak si zapisal vsetkych hracov stlac 0 ak chces dalej zapisovat hracov stlac 1:");
             premenna = pomocna.nextLine();
@@ -216,12 +226,13 @@ public class Assignment1 {
             }
 
         }
-        if (poradie==1) {
-            System.err.println("Iba jeden hrac nemoze hrat!");
+        if (poradie==1 ) {
+            System.err.println("Nemoze hrat iba jeden hrac!");
             System.exit(0);
         }
+
         System.out.println("Hra zacina!");
-        spravTah(doska);
+        spravTah(doska,pomocna);
 
     }
 

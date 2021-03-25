@@ -7,8 +7,7 @@ public class  HraciePole {
     private String poleName;
     private BigDecimal cenaPola;
     private BigDecimal stojne;
-    private Nehnutelnost nehnutelnost;
-    private boolean sanca = false;
+    private boolean sanca ;
 
 
     public HraciePole(String poleName, BigDecimal cena, BigDecimal stojne, boolean jeSanca) {

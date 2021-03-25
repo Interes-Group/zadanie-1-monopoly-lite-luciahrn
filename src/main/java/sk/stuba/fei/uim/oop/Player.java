@@ -44,9 +44,6 @@ public class Player {
 
     public int zadajPole(int poleTah) {
         this.pole=poleTah;
-        // if(this.pole.compareTo(new BigDecimal(0))<2){
-        //     System.out.println("V hre konci"+this);
-        //     throw new NotEnoughMoney();
         return pole;
     }
 

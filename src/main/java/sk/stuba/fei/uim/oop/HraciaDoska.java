@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HraciaDoska {
@@ -18,14 +17,14 @@ public class HraciaDoska {
         policka.add(pole1);
         HraciePole pole2 = new Nehnutelnost("Potraviny",new BigDecimal(1000),new BigDecimal(100));
         policka.add(pole2);
-        HraciePole pole3 = new Nehnutelnost("Základná škola",new BigDecimal(1000),new BigDecimal(200));
+        HraciePole pole3 = new Nehnutelnost("Základná škola",new BigDecimal(1300),new BigDecimal(200));
         policka.add(pole3);
         HraciePole pole4 = new HraciePole("ŠPECIÁLNE POLE Karta šanca",new BigDecimal(0),new BigDecimal(0),true) {
         };
         policka.add(pole4);
-        HraciePole pole5 = new Nehnutelnost("Hasičská zbrojnica",new BigDecimal(1000),new BigDecimal(300));
+        HraciePole pole5 = new Nehnutelnost("Hasičská zbrojnica",new BigDecimal(1400),new BigDecimal(300));
         policka.add(pole5);
-        HraciePole pole6 = new Nehnutelnost("Obchod s oblečením",new BigDecimal(1000),new BigDecimal(400));
+        HraciePole pole6 = new Nehnutelnost("Obchod s oblečením",new BigDecimal(1450),new BigDecimal(300));
         policka.add(pole6);
         HraciePole pole7 = new PoleVazanie("ŠPECIÁLNE POLE Väzenie",new BigDecimal(0),new BigDecimal(0));
         policka.add(pole7);
@@ -112,24 +111,11 @@ public class HraciaDoska {
         }
     }
 
-    public int getPoziciaHraca(Player hrac) {
-        return pozicie.get(hrac);
-    }
-
-    public void setPoziciaHraca(Player hrac, int hodKockou) {
-        int povodnaPozicia  = getPoziciaHraca(hrac);
-        int novaPozicia = povodnaPozicia + hodKockou;
-        pozicie.put(hrac,novaPozicia);
-    }
 
     public HraciePole getPolickoNaPozici  (int pole) {
         return policka.get(pole);    }
 
-    public void vymenPoziciuHraca(Player hrac) {
-        int povodnaPozicia  = getPoziciaHraca(hrac);
-        int novaPozicia = povodnaPozicia -12;
-        pozicie.replace(hrac,novaPozicia);
-    }
+
 
 
 

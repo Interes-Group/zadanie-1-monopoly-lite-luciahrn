@@ -12,7 +12,5 @@ public class PolePlatbaDane extends HraciePole{
         return dan;
     }
 
-    public void setDan(BigDecimal dan) {
-        this.dan = dan;
-    }
+
 }
